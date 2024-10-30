@@ -21,8 +21,7 @@
  * avoid the <code>IndexOutOfBoundsException</code> and throw the
  * <code>NullPointerException</code> where noted.
  */
-public class MyLinkedList
-{
+public class MyLinkedList {
     /**
      * The Node class is a private inner class of the <code>MyLinkedList</code>
      * class. Since none of the methods of <code>MyLinkedList</code> will return
@@ -30,30 +29,31 @@ public class MyLinkedList
      * If you prefer, you may replace this with a separate top-level class.
      * Also, you can build a constructor or use the default constructor.
      */
-    private static class Node
-    {
-        // These fields both default to null.
+
+    private static class Node {
         public Integer value;
         public Node next;
+
+        public Node(Integer value) {
+            this.value = value;
+            this.next = null;
+        }
     }
-
     private Node first;
-
     /**
      * Constructs an empty list.
      */
     public MyLinkedList() {
         first = null;
-        // TODO: you can add code here
     }
 
-    /**
-     * Appends the specified Integer to the beginning of the list.
-     * @param item Integer to be appended to this list
-     * @throws NullPointerException if item is null
-     */
     public void addFirst(Integer item) {
-        // TODO: your code goes here
+        if (item == null) {
+            throw new NullPointerException("the item cannot be null");
+        }
+        Node newNode = new Node(item);
+        newNode.next = first;
+        first = newNode;
     }
 
     /**
@@ -64,8 +64,27 @@ public class MyLinkedList
      * @param item Integer to be inserted
      * @throws NullPointerException if item is null
      */
+
     public void add(int index, Integer item) {
-        // TODO: your code goes here
+        if (item == null) {
+            throw new NullPointerException("Item cannot be null");
+        }
+        if (index < 0 || index > size()) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+
+        if (index == 0) {
+            addFirst(item);
+        } else {
+            Node current = first;
+            for (int i = 0; i < index - 1; i++) {
+                current = current.next;
+            }
+
+            Node newNode = new Node(item);
+            newNode.next = current.next;
+            current.next = newNode;
+        }
     }
 
     /**
@@ -75,8 +94,23 @@ public class MyLinkedList
      * @return the Integer that was removed from the list
      */
     public Integer remove(int index) {
-        // TODO: modify the code here
-        return null;
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException("Index out of bounds. Oof.");
+        }
+        if (index == 0) {
+            Integer val = first.value;
+            first = first.next;
+            return val;
+        }
+        else {
+            Node current = first;
+            for (int i = 0; i < index - 1; i++) {
+                current = current.next;
+            }
+            Integer val = current.next.value;
+            current.next = current.next.next;
+            return val;
+        }
     }
 
     /**
@@ -85,9 +119,17 @@ public class MyLinkedList
      * @return the Integer at the specified position in this list
      */
     public Integer get(int index) {
-        // TODO: modify the code here
-        return null;
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException("Looks like index is out of bounds");
+        }
+
+        Node current = first;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current.value;
     }
+
 
     /**
      * Replaces the Integer at the specified position in this list with the
@@ -97,16 +139,32 @@ public class MyLinkedList
      * @throws NullPointerException if item is null
      */
     public void set(int index, Integer item) {
-        // TODO: your code goes here
-    }
+        if (item == null) {
+            throw new NullPointerException("Item cannot be null");
+        }
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException("Index out of bounds..!");
+        }
 
+        Node current = first;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        current.value = item;
+    }
     /**
      * Returns the number of Integers in this list.
      * @return the number of Integers in this list
      */
     public int size() {
-        // TODO: modify the code here
-        return 0;
+        int count = 0;
+        Node current = first;
+
+        while (current != null) {
+            count++;
+            current = current.next;
+        }
+        return count;
     }
 
     /**
@@ -118,8 +176,18 @@ public class MyLinkedList
      * @throws NullPointerException if item is null
      */
     public int indexOf(Integer item) {
-        // TODO: modify the code here
-        return 0;
+        if (item == null) {
+            throw new NullPointerException("Item cannot be null");
+        }
+        Node current = first;
+        int index = 0;
+
+        while (current != null) {
+            if (current.value.equals(item)) return index;
+            current = current.next;
+            index++;
+        }
+        return -1;
     }
 
     /**
@@ -129,24 +197,20 @@ public class MyLinkedList
      * @throws NullPointerException if item is null
      */
     public boolean contains(Integer item) {
-        // TODO: modify the code here
-        return false;
+        return indexOf(item) != -1;
     }
-
     /**
      * Removes all the elements from this list. The list will be empty after this
      * call returns.
      */
     public void clear() {
-        // TODO: your code goes here
+        first = null;
     }
-
     /**
      * Returns <code>true</code> if this list has no elements.
      * @return true if this list is empty
      */
     public boolean isEmpty() {
-        // TODO: modify the code here
-        return false;
+        return this.first == null;
     }
 }
